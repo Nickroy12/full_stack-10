@@ -6,6 +6,7 @@ import { authClient } from '@/lib/auth-client';
 import Link from 'next/link';
 
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const LoginPage = () => {
 
@@ -26,10 +27,10 @@ const LoginPage = () => {
       callbackURL:'/'
     });
       if (error) {
-        alert(error.message || 'Login failed');
+       toast.error(error.message || 'Login failed');
         return;
       }
-            alert('Login successful!');
+           toast.success('Login successful!');
       console.log(data , "login");
   };
 

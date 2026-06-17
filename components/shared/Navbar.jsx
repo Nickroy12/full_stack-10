@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState, useRef, useEffect } from "react";
 import { FaSpoon } from "react-icons/fa6";
+import { toast } from "react-toastify";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // Mobile drawer state
@@ -19,6 +20,7 @@ export const Navbar = () => {
   const menuItems = [
     { label: "Home", href: "/" },
     { label: "Browse Recipes", href: "/recipes" },
+    { label: "Feature Racipe ", href: "/feature" },
   ];
 
   const isActive = (path) => pathname === path;
@@ -46,7 +48,7 @@ export const Navbar = () => {
 
   const handleSignOut = async () => {
      await signOut(); 
-    console.log("Signing out...");
+    toast.error("Signing out...");
   };
 
   return (
@@ -111,6 +113,7 @@ export const Navbar = () => {
                       <div className="px-4 py-2 border-b border-zinc-100 dark:border-zinc-800/60">
                         <p className="text-[11px] uppercase tracking-wider text-zinc-400 dark:text-zinc-500 font-semibold">Signed in as</p>
                         <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">{session.user?.name || "User"}</p>
+                        <p className="text-sm  text-zinc-900 dark:text-zinc-100 truncate">{session.user?.email}</p>
                       </div>
                       
                       <Link

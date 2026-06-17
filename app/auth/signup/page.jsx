@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -31,16 +32,16 @@ export default function SignupPage() {
       });
       console.log(data, "error");
       if (error) {
-        alert(error.message || "Signup failed");
+        toast.error(error.message || "Signup failed");
         return;
       }
 
-      alert("Account created successfully!");
+      toast.apply("Account created successfully!");
       router.push("/");
       
     } catch (error) {
       console.error(error);
-      alert("Something went wrong!");
+      toast.error("Something went wrong!");
     } finally {
       setLoading(false);
     }
