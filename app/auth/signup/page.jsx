@@ -1,47 +1,97 @@
 "use client";
 
 import { useState } from "react";
-
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
+
 import { toast } from "react-toastify";
+import { authClient } from "@/lib/auth-client";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
   const router = useRouter();
+
+  // রেগুলার এক্সপ্রেশন দিয়ে পাসওয়ার্ড ভ্যালিডেশন চেক
+  const hasMinLength = password.length >= 8;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  const isPasswordValid = hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecial;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // পাসওয়ার্ড ভ্যালিড না হলে সাবমিট হবে না
+    if (!isPasswordValid) {
+      toast.error("Please satisfy all password requirements.");
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      setLoading(true);
       const formData = new FormData(e.currentTarget);
 
       const name = formData.get("name");
       const email = formData.get("email");
-      const password = formData.get("password");
-      // Automatically assigns "seeker" on submission
+      const imageFile = formData.get("image");
+
+      let displayUrl = "";
+
+      // ১. ইমেজ ফাইল থাকলে ImgBB-তে আপলোড করা
+      if (imageFile && imageFile.size > 0) {
+        const imgbbFormData = new FormData();
+        imgbbFormData.append("image", imageFile);
+
+        const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+
+        if (!apiKey) {
+          throw new Error("API key is missing! Did you restart your Next.js server?");
+        }
+
+        const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+          method: "POST",
+          body: imgbbFormData,
+        });
+
+        const imgbbData = await response.json();
+
+        if (imgbbData.success) {
+          displayUrl = imgbbData.data.url;
+        } else {
+          console.error("ImgBB Full Error:", imgbbData);
+          throw new Error(imgbbData.error?.message || "Image upload failed.");
+        }
+      }
+
       const role = "chef";
 
+      // ২. নতুন ইউজার সাইন-আপ প্রসেস
       const { data, error } = await authClient.signUp.email({
         name,
         email,
         password,
         role,
+        image: displayUrl,
       });
-      console.log(data, "error");
+
+      console.log(error, "error");
+
       if (error) {
         toast.error(error.message || "Signup failed");
         return;
       }
 
-      toast.apply("Account created successfully!");
+      toast.success("Account created successfully!");
       router.push("/");
-      
+
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong!");
+      toast.error(error.message || "Something went wrong!");
     } finally {
       setLoading(false);
     }
@@ -65,7 +115,6 @@ export default function SignupPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Form Fields Container */}
           <div className="space-y-5">
             {/* Name */}
             <div className="space-y-2">
@@ -95,17 +144,74 @@ export default function SignupPage() {
               />
             </div>
 
-            {/* Password */}
+            {/* Password with Eye Toggle & Realtime Indicators */}
             <div className="space-y-2">
               <label className="block text-xs font-semibold uppercase tracking-wider text-foreground">
                 Password
               </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full pl-4 pr-12 py-3 rounded-xl bg-white border border-emerald-100 text-slate-900 placeholder-emerald-700/30 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all duration-200"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-600 transition-colors duration-150"
+                >
+                  {showPassword ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 11-4.243-4.243m4.242 4.242L9.88 9.88" />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+
+              {/* লাইভ পাসওয়ার্ড রিকোয়ারমেন্ট চেকলিস্ট */}
+              {password && (
+                <div className="mt-3 p-3 bg-white/40 border border-emerald-100/50 rounded-xl space-y-1.5 text-xs font-medium backdrop-blur-sm transition-all">
+                  <p className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider mb-1">Password Requirements:</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className={`flex items-center gap-1.5 ${hasMinLength ? "text-emerald-600" : "text-slate-400"}`}>
+                      <span>{hasMinLength ? "✓" : "•"}</span> 8+ Characters
+                    </div>
+                    <div className={`flex items-center gap-1.5 ${hasUppercase ? "text-emerald-600" : "text-slate-400"}`}>
+                      <span>{hasUppercase ? "✓" : "•"}</span> Uppercase (A)
+                    </div>
+                    <div className={`flex items-center gap-1.5 ${hasLowercase ? "text-emerald-600" : "text-slate-400"}`}>
+                      <span>{hasLowercase ? "✓" : "•"}</span> Lowercase (a)
+                    </div>
+                    <div className={`flex items-center gap-1.5 ${hasNumber ? "text-emerald-600" : "text-slate-400"}`}>
+                      <span>{hasNumber ? "✓" : "•"}</span> Number (2)
+                    </div>
+                    <div className={`flex items-center gap-1.5 ${hasSpecial ? "text-emerald-600" : "text-slate-400"}`}>
+                      <span>{hasSpecial ? "✓" : "•"}</span> Special Char (#)
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Profile Image Field */}
+            <div className="space-y-2">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-foreground">
+                Profile Picture
+              </label>
               <input
-                type="password"
-                name="password"
-                required
-                placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-xl bg-white border border-emerald-100 text-slate-900 placeholder-emerald-700/30 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all duration-200"
+                type="file"
+                name="image"
+                accept="image/*"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-emerald-100 text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition-all duration-200"
               />
             </div>
           </div>

@@ -20,7 +20,7 @@ export const Navbar = () => {
   const menuItems = [
     { label: "Home", href: "/" },
     { label: "Browse Recipes", href: "/recipes" },
-    { label: "Feature Racipe ", href: "/feature" },
+    { label: "Feature Recipe", href: "/feature" },
   ];
 
   const isActive = (path) => pathname === path;
@@ -48,7 +48,7 @@ export const Navbar = () => {
 
   const handleSignOut = async () => {
      await signOut(); 
-    toast.error("Signing out...");
+     toast.error("Signing out...");
   };
 
   return (
@@ -101,23 +101,32 @@ export const Navbar = () => {
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     className="flex items-center gap-2 p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none"
                   >
-                    <div className="h-8 w-8 rounded-full bg-green-600 text-white flex items-center justify-center text-sm font-bold shadow-sm">
-                      {getInitials(session.user?.name)}
+                    <div className="h-8 w-8 rounded-full bg-green-600 border-2 border-green-600 text-white flex items-center justify-center text-sm font-bold shadow-sm overflow-hidden relative">
+                      {session.user?.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img 
+                          src={session.user.image} 
+                          alt={session.user?.name || "Avatar"} 
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        getInitials(session.user?.name)
+                      )}
                     </div>
                     <FaSpoon className={`h-3.5 w-3.5 text-zinc-500 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
                   </button>
 
                   {/* Dropdown Menu Container */}
                   {isDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-lg py-1 z-50 transform origin-top-right transition-all animate-in fade-in slide-in-from-top-1 duration-150">
+                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-950  dark:border-zinc-800 rounded-xl shadow-lg py-1 z-50 transform origin-top-right transition-all animate-in fade-in slide-in-from-top-1 duration-150">
                       <div className="px-4 py-2 border-b border-zinc-100 dark:border-zinc-800/60">
                         <p className="text-[11px] uppercase tracking-wider text-zinc-400 dark:text-zinc-500 font-semibold">Signed in as</p>
                         <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">{session.user?.name || "User"}</p>
-                        <p className="text-sm  text-zinc-900 dark:text-zinc-100 truncate">{session.user?.email}</p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{session.user?.email}</p>
                       </div>
                       
                       <Link
-                        href="/dashboard"
+                        href="/dashboard/chef/recipe"
                         onClick={() => setIsDropdownOpen(false)}
                         className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                       >
@@ -126,7 +135,7 @@ export const Navbar = () => {
                       </Link>
                       
                       <Link
-                        href="/profile"
+                        href="/dashboard/profile"
                         onClick={() => setIsDropdownOpen(false)}
                         className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                       >
@@ -199,8 +208,7 @@ export const Navbar = () => {
                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                   </svg>
-                )
-                }
+                )}
               </button>
             </div>
           </div>
@@ -255,8 +263,17 @@ export const Navbar = () => {
               /* Authenticated Layout (Mobile Fly-out Panel) */
               <div className="flex flex-col gap-1">
                 <div className="px-3 py-2 text-base font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-3 border-b border-zinc-100 dark:border-zinc-800/50 pb-4 mb-2">
-                  <div className="h-10 w-10 rounded-full bg-green-600 text-white flex items-center justify-center text-base font-bold shadow-sm shrink-0">
-                    {getInitials(session.user?.name)}
+                  <div className="h-10 w-10 rounded-full bg-green-600 text-white flex items-center justify-center text-base font-bold shadow-sm shrink-0 overflow-hidden relative">
+                    {session.user?.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img 
+                        src={session.user.image} 
+                        alt={session.user?.name || "Avatar"} 
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      getInitials(session.user?.name)
+                    )}
                   </div>
                   <div className="truncate">
                     <p className="text-[10px] uppercase tracking-wider text-zinc-400 font-medium">Logged in as</p>
@@ -265,7 +282,7 @@ export const Navbar = () => {
                 </div>
 
                 <Link
-                  href="/dashboard"
+                  href="/dashboard/chef/recipe"
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-md text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
                 >
@@ -274,7 +291,7 @@ export const Navbar = () => {
                 </Link>
 
                 <Link
-                  href="/profile"
+                  href="/dashboard/profile"
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-md text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
                 >
