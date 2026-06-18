@@ -1,4 +1,5 @@
 import { getUserSession } from "@/lib/core/sessions";
+import { UpdateProfileForm } from "@/ui/UpdateProfileForm";
 import { Mail, User, Calendar } from "lucide-react";
 import Image from "next/image";
 
@@ -6,9 +7,9 @@ const ProfilePage = async () => {
   const user = await getUserSession();
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4">
+    <div className="min-h-screen bg-background py-10 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="bg-background rounded-2xl shadow-lg shadow-amber-50/20 overflow-hidden">
           
           {/* Cover */}
           <div className="h-40 bg-gradient-to-r from-green-500 to-green-600"></div>
@@ -23,11 +24,11 @@ const ProfilePage = async () => {
                 }
                 height={140} width={140}
                 alt={user?.name}
-                className=" rounded-full border-4 border-white object-cover bg-white"
+                className=" rounded-full border-4  object-cover bg-background"
               />
 
               <div className="flex-1">
-                <h1 className="text-3xl font-bold text-gray-800">
+                <h1 className="text-3xl font-bold ">
                   {user?.name || "Unknown User"}
                 </h1>
 
@@ -46,7 +47,7 @@ const ProfilePage = async () => {
           <div className="grid md:grid-cols-2 gap-6 p-8 border-t">
             
             {/* Personal Info */}
-            <div className="bg-gray-50 rounded-xl p-6">
+            <div className="bg-background rounded-xl p-6">
               <h2 className="text-xl font-semibold mb-5">
                 Personal Information
               </h2>
@@ -55,7 +56,7 @@ const ProfilePage = async () => {
                 <div className="flex items-center gap-3">
                   <User size={20} />
                   <div>
-                    <p className="text-sm text-gray-500">Full Name</p>
+                    <p className="text-sm text-foreground">Full Name</p>
                     <p className="font-medium">{user?.name}</p>
                   </div>
                 </div>
@@ -63,7 +64,7 @@ const ProfilePage = async () => {
                 <div className="flex items-center gap-3">
                   <Mail size={20} />
                   <div>
-                    <p className="text-sm text-gray-500">Email</p>
+                    <p className="text-sm text-foreground">Email</p>
                     <p className="font-medium">{user?.email}</p>
                   </div>
                 </div>
@@ -71,7 +72,7 @@ const ProfilePage = async () => {
                 <div className="flex items-center gap-3">
                   <Calendar size={20} />
                   <div>
-                    <p className="text-sm text-gray-500">Member Since</p>
+                    <p className="text-sm text-foreground">Member Since</p>
                     <p className="font-medium">
                       {user?.createdAt
                         ? new Date(user.createdAt).toLocaleDateString()
@@ -83,7 +84,7 @@ const ProfilePage = async () => {
             </div>
 
             {/* Account Info */}
-            <div className="bg-gray-50 rounded-xl p-6">
+            <div className="bg-background rounded-xl p-6">
               <h2 className="text-xl font-semibold mb-5">
                 Account Overview
               </h2>
@@ -123,17 +124,9 @@ const ProfilePage = async () => {
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-4 p-8 border-t">
-            <button className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-              Edit Profile
-            </button>
-
-            <button className="px-5 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition">
-              Change Password
-            </button>
-
-            <button className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-              Delete Account
-            </button>
+           
+           <UpdateProfileForm/>
+         
           </div>
         </div>
       </div>
