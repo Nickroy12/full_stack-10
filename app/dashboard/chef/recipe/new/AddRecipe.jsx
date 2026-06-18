@@ -1,7 +1,17 @@
 "use client"
+import { createRecipe } from '@/lib/action/action';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const AddRecipeForm = () => {
+  // 🟢 মক ইউজার ডিফাইন করা হলো (পরবর্তীতে এটি ব্যাকএন্ড বা Auth থেকে আসবে)
+  const mockUser = {
+    id: "user_67890abcde",
+    name: "John Doe",
+    email: "johndoe@example.com",
+    role: "chef"
+  };
+
   const initialFormState = {
     name: '',
     image: null,
@@ -57,7 +67,6 @@ const AddRecipeForm = () => {
 
     setSaving(true);
 
-    // এখানে আর Array-তে কনভার্ট করা হয়নি, সরাসরি টেক্সট পাস করা হয়েছে
     const finalRecipeData = {
       name: recipe.name,
       image: recipe.image,
@@ -65,17 +74,22 @@ const AddRecipeForm = () => {
       cuisineType: recipe.cuisineType,
       difficulty: recipe.difficulty,
       prepTime: recipe.prepTime,
-      ingredients: recipe.ingredientsText.trim(), // Array না হয়ে স্ট্রিং আকারে যাবে
-      instructions: recipe.instructionsText.trim(), // Array না হয়ে স্ট্রিং আকারে যাবে
+      ingredients: recipe.ingredientsText.trim(), 
+      instructions: recipe.instructionsText.trim(), 
       likesCount: 0,
       isFeatured: false,
       status: "usual",
       createdAt: new Date(),
+      
+      // 🟢 মক ইউজারের ডাটা রেসিপির সাথে যুক্ত করা হলো
+      userId: mockUser.id,
+
     };
 
-    console.log('Payload for "recipes" Collection:', finalRecipeData);
-    
-    alert('Recipe saved successfully!');
+    const res = await createRecipe(finalRecipeData)
+    if(res?.insertedId){
+      toast.success('Successfully Recipe Uploaded !! ')
+    }
     
     setRecipe(initialFormState);
     if (e.target) e.target.reset(); 
@@ -90,7 +104,8 @@ const AddRecipeForm = () => {
       
       <div className="bg-gradient-to-r from-emerald-600 to-green-500 p-6 text-white">
         <h2 className="text-3xl font-extrabold tracking-tight">Create a New Recipe</h2>
-        <p className="text-green-100 mt-1 text-sm">Fill out the details below to add a dish to your collection.</p>
+        {/* 🟢 UI-তে ডেমো হিসেবে ইউজারের নাম দেখানোর জন্য (ঐচ্ছিক) */}
+        <p className="text-green-100 mt-1 text-sm">Posting as: <strong>{mockUser.name}</strong></p>
       </div>
       
       <form onSubmit={handleSubmit} className="p-8 space-y-6">
