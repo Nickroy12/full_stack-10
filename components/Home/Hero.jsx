@@ -77,7 +77,7 @@ export const Hero = () => {
               <motion.a
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                href="#publish"
+                href={'/dashboard/chef/recipe/new'}
                 className="w-full sm:w-auto text-center px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl transition-all shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/30 tracking-wide"
               >
                 Publish a Recipe

@@ -97,7 +97,7 @@ const AddRecipeForm = ({user}) => {
       
       <div className="bg-gradient-to-r from-emerald-600 to-green-500 p-6 text-white">
         <h2 className="text-3xl font-extrabold tracking-tight">Create a New Recipe</h2>
-        {/* 🟢 UI-তে ডেমো হিসেবে ইউজারের নাম দেখানোর জন্য (ঐচ্ছিক) */}
+        
         <p className="text-green-100 mt-1 text-sm">Posting as: <strong>{user.name}</strong></p>
       </div>
       

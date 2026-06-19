@@ -15,6 +15,7 @@ export function UpdateProfileForm() {
       setSelectedFile(e.target.files[0]);
     }
   };
+  console.log(selectedFile , 'Se');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,16 +30,16 @@ export function UpdateProfileForm() {
       // ১. Imgbb-তে ইমেজ আপলোড
       if (selectedFile) {
         const imgbbFormData = new FormData();
-        imgbbFormData.append("image", selectedFile);
-
-        const IMGBB_API_KEY = process.env.NEXT_PUBLIC_IMGBB_API_KEY; 
+         imgbbFormData.append("image", selectedFile);
+            
+        const IMGBB_API_KEY = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
 
         const imgbbResponse = await fetch(
           `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
           {
             method: "POST",
             body: imgbbFormData,
-          }
+          },
         );
 
         const imgbbData = await imgbbResponse.json();
@@ -56,16 +57,18 @@ export function UpdateProfileForm() {
         updateData.image = imageUrl;
       }
 
-      // Better-Auth এর updateUser কল করা
-      await authClient.updateUser(updateData);
+      const { data, error } = await authClient.updateUser(updateData);
 
+      if (error) {
+        throw new Error(error.message || "Failed to update user in database.");
+      }
       toast.success("Profile updated successfully!");
+
       setIsOpen(false);
       setSelectedFile(null);
-      
+
       // ৩. পেজ রিফ্রেশ করার জন্য (যাতে নতুন নাম ও ছবি সাথে সাথে দেখা যায়)
       window.location.reload();
-
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile. Please try again.");
@@ -76,7 +79,7 @@ export function UpdateProfileForm() {
 
   return (
     <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
-      <Button 
+      <Button
         onPress={() => setIsOpen(true)}
         className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
       >
@@ -87,7 +90,7 @@ export function UpdateProfileForm() {
         <Modal.Container placement="auto">
           <Modal.Dialog className="sm:max-w-md">
             <Modal.CloseTrigger />
-            
+
             <Modal.Header>
               <Modal.Heading>Update Profile</Modal.Heading>
               <p className="mt-1.5 text-sm leading-5 text-muted">
@@ -98,9 +101,13 @@ export function UpdateProfileForm() {
             <Modal.Body className="p-6">
               <Surface variant="default">
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                  
                   {/* নাম ইনপুট */}
-                  <TextField className="w-full" name="name" type="text" variant="secondary">
+                  <TextField
+                    className="w-full"
+                    name="name"
+                    type="text"
+                    variant="secondary"
+                  >
                     <Label>Name</Label>
                     <Input placeholder="Enter your name" required />
                   </TextField>
@@ -108,36 +115,34 @@ export function UpdateProfileForm() {
                   {/* ইমেজ ইনপুট */}
                   <TextField className="w-full" type="file" variant="secondary">
                     <Label>Profile Image (Optional)</Label>
-                    <Input 
-                      type="file" 
-                      accept="image/*" 
-                      onChange={handleFileChange} 
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
                       className="cursor-pointer"
                     />
                   </TextField>
 
                   <Modal.Footer className="px-0 pb-0 pt-4">
-                    <Button 
-                      type="button" 
-                      variant="secondary" 
+                    <Button
+                      type="button"
+                      variant="secondary"
                       onPress={() => setIsOpen(false)}
                       disabled={loading}
                     >
                       Cancel
                     </Button>
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       className="bg-green-600 text-white hover:bg-green-700"
                       disabled={loading}
                     >
                       {loading ? "Saving..." : "Save Changes"}
                     </Button>
                   </Modal.Footer>
-
                 </form>
               </Surface>
             </Modal.Body>
-
           </Modal.Dialog>
         </Modal.Container>
       </Modal.Backdrop>
