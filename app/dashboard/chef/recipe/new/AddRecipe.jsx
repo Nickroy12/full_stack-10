@@ -3,14 +3,9 @@ import { createRecipe } from '@/lib/action/action';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const AddRecipeForm = () => {
+const AddRecipeForm = ({user}) => {
   // 🟢 মক ইউজার ডিফাইন করা হলো (পরবর্তীতে এটি ব্যাকএন্ড বা Auth থেকে আসবে)
-  const mockUser = {
-    id: "user_67890abcde",
-    name: "John Doe",
-    email: "johndoe@example.com",
-    role: "chef"
-  };
+
 
   const initialFormState = {
     name: '',
@@ -80,9 +75,7 @@ const AddRecipeForm = () => {
       isFeatured: false,
       status: "usual",
       createdAt: new Date(),
-      
-      // 🟢 মক ইউজারের ডাটা রেসিপির সাথে যুক্ত করা হলো
-      userId: mockUser.id,
+      userId: user.id,
 
     };
 
@@ -105,7 +98,7 @@ const AddRecipeForm = () => {
       <div className="bg-gradient-to-r from-emerald-600 to-green-500 p-6 text-white">
         <h2 className="text-3xl font-extrabold tracking-tight">Create a New Recipe</h2>
         {/* 🟢 UI-তে ডেমো হিসেবে ইউজারের নাম দেখানোর জন্য (ঐচ্ছিক) */}
-        <p className="text-green-100 mt-1 text-sm">Posting as: <strong>{mockUser.name}</strong></p>
+        <p className="text-green-100 mt-1 text-sm">Posting as: <strong>{user.name}</strong></p>
       </div>
       
       <form onSubmit={handleSubmit} className="p-8 space-y-6">

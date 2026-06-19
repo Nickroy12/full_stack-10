@@ -3,7 +3,8 @@ import React from 'react'
 import Image from 'next/image'
 import { Edit, Trash2, MoreVertical } from 'lucide-react'
 
-const MyRecipe = async ({ recipes }) => {
+const MyRecipe = async ({ recipes , user }) => {
+  console.log(user , "adv");
   return (
     <div className="p-6 w-full max-w-7xl mx-auto">
       {/* Header */}
