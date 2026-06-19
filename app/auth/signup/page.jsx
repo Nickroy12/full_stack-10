@@ -13,7 +13,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  // রেগুলার এক্সপ্রেশন দিয়ে পাসওয়ার্ড ভ্যালিডেশন চেক
+  // রেগুলার এক্সপ্রেশন দিয়ে পাসওয়ার্ড ভ্যালিডেশন চেক
   const hasMinLength = password.length >= 8;
   const hasUppercase = /[A-Z]/.test(password);
   const hasLowercase = /[a-z]/.test(password);
@@ -25,7 +25,6 @@ export default function SignupPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // পাসওয়ার্ড ভ্যালিড না হলে সাবমিট হবে না
     if (!isPasswordValid) {
       toast.error("Please satisfy all password requirements.");
       return;
@@ -35,14 +34,12 @@ export default function SignupPage() {
 
     try {
       const formData = new FormData(e.currentTarget);
-
       const name = formData.get("name");
       const email = formData.get("email");
       const imageFile = formData.get("image");
 
       let displayUrl = "";
 
-      // ১. ইমেজ ফাইল থাকলে ImgBB-তে আপলোড করা
       if (imageFile && imageFile.size > 0) {
         const imgbbFormData = new FormData();
         imgbbFormData.append("image", imageFile);
@@ -70,7 +67,6 @@ export default function SignupPage() {
 
       const role = "chef";
 
-      // ২. নতুন ইউজার সাইন-আপ প্রসেস
       const { data, error } = await authClient.signUp.email({
         name,
         email,
@@ -78,8 +74,6 @@ export default function SignupPage() {
         role,
         image: displayUrl,
       });
-
-      console.log(error, "error");
 
       if (error) {
         toast.error(error.message || "Signup failed");
@@ -98,18 +92,18 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 py-12 text-slate-800 overflow-hidden">
+    <div className="relative min-h-screen flex items-center justify-center px-4 py-12 text-slate-800 dark:text-slate-100 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
       {/* Decorative background green ambient glows */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-200/40 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-teal-200/30 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-200/40 dark:bg-emerald-900/15 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-teal-200/30 dark:bg-teal-900/10 rounded-full blur-[140px] pointer-events-none" />
 
       {/* Glassmorphic Container */}
-      <div className="relative w-full max-w-xl rounded-3xl border border-emerald-100 bg-white/20 backdrop-blur-3xl p-8 md:p-10 shadow-2xl shadow-emerald-900/5">
+      <div className="relative w-full max-w-xl rounded-3xl border border-emerald-100 dark:border-emerald-950 bg-white/70 dark:bg-slate-900/60 backdrop-blur-3xl p-8 md:p-10 shadow-2xl shadow-emerald-900/5 dark:shadow-black/50">
         <div className="text-center mb-8">
-          <h2 className="text-4xl font-extrabold tracking-tight text-foreground mb-3">
+          <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-3">
             Create Account
           </h2>
-          <p className="text-foreground text-sm font-medium">
+          <p className="text-slate-600 dark:text-slate-300 text-sm font-medium">
             Join our platform to advance your career and find your next milestone.
           </p>
         </div>
@@ -118,7 +112,7 @@ export default function SignupPage() {
           <div className="space-y-5">
             {/* Name */}
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-foreground">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                 Full Name
               </label>
               <input
@@ -126,13 +120,13 @@ export default function SignupPage() {
                 name="name"
                 required
                 placeholder="John Doe"
-                className="w-full px-4 py-3 rounded-xl bg-white border border-emerald-100 text-slate-900 placeholder-emerald-700/30 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all duration-200"
+                className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-950 border border-emerald-100 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 outline-none focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 dark:focus:ring-emerald-500/5 transition-all duration-200"
               />
             </div>
 
             {/* Email */}
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-foreground">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                 Email Address
               </label>
               <input
@@ -140,13 +134,13 @@ export default function SignupPage() {
                 name="email"
                 required
                 placeholder="john@example.com"
-                className="w-full px-4 py-3 rounded-xl bg-white border border-emerald-100 text-slate-900 placeholder-emerald-700/30 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all duration-200"
+                className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-950 border border-emerald-100 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 outline-none focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 dark:focus:ring-emerald-500/5 transition-all duration-200"
               />
             </div>
 
             {/* Password with Eye Toggle & Realtime Indicators */}
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-foreground">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                 Password
               </label>
               <div className="relative">
@@ -157,12 +151,12 @@ export default function SignupPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-4 pr-12 py-3 rounded-xl bg-white border border-emerald-100 text-slate-900 placeholder-emerald-700/30 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all duration-200"
+                  className="w-full pl-4 pr-12 py-3 rounded-xl bg-white dark:bg-slate-950 border border-emerald-100 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 outline-none focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 dark:focus:ring-emerald-500/5 transition-all duration-200"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-600 transition-colors duration-150"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-150"
                 >
                   {showPassword ? (
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
@@ -177,25 +171,27 @@ export default function SignupPage() {
                 </button>
               </div>
 
-              {/* লাইভ পাসওয়ার্ড রিকোয়ারমেন্ট চেকলিস্ট */}
+              {/* লাইভ পাসওয়ার্ড রিকোয়ারমেন্ট চেকলিস্ট */}
               {password && (
-                <div className="mt-3 p-3 bg-white/40 border border-emerald-100/50 rounded-xl space-y-1.5 text-xs font-medium backdrop-blur-sm transition-all">
-                  <p className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider mb-1">Password Requirements:</p>
+                <div className="mt-3 p-3 bg-white/60 dark:bg-slate-950/60 border border-emerald-100/50 dark:border-emerald-950/50 rounded-xl space-y-1.5 text-xs font-medium backdrop-blur-sm transition-all">
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider mb-1">
+                    Password Requirements:
+                  </p>
                   <div className="grid grid-cols-2 gap-2">
-                    <div className={`flex items-center gap-1.5 ${hasMinLength ? "text-emerald-600" : "text-slate-400"}`}>
-                      <span>{hasMinLength ? "✓" : "•"}</span> 8+ Characters
+                    <div className={`flex items-center gap-1.5 transition-colors ${hasMinLength ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-slate-400 dark:text-slate-600"}`}>
+                      <span className="text-sm">{hasMinLength ? "✓" : "•"}</span> 8+ Characters
                     </div>
-                    <div className={`flex items-center gap-1.5 ${hasUppercase ? "text-emerald-600" : "text-slate-400"}`}>
-                      <span>{hasUppercase ? "✓" : "•"}</span> Uppercase (A)
+                    <div className={`flex items-center gap-1.5 transition-colors ${hasUppercase ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-slate-400 dark:text-slate-600"}`}>
+                      <span className="text-sm">{hasUppercase ? "✓" : "•"}</span> Uppercase (A)
                     </div>
-                    <div className={`flex items-center gap-1.5 ${hasLowercase ? "text-emerald-600" : "text-slate-400"}`}>
-                      <span>{hasLowercase ? "✓" : "•"}</span> Lowercase (a)
+                    <div className={`flex items-center gap-1.5 transition-colors ${hasLowercase ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-slate-400 dark:text-slate-600"}`}>
+                      <span className="text-sm">{hasLowercase ? "✓" : "•"}</span> Lowercase (a)
                     </div>
-                    <div className={`flex items-center gap-1.5 ${hasNumber ? "text-emerald-600" : "text-slate-400"}`}>
-                      <span>{hasNumber ? "✓" : "•"}</span> Number (2)
+                    <div className={`flex items-center gap-1.5 transition-colors ${hasNumber ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-slate-400 dark:text-slate-600"}`}>
+                      <span className="text-sm">{hasNumber ? "✓" : "•"}</span> Number (2)
                     </div>
-                    <div className={`flex items-center gap-1.5 ${hasSpecial ? "text-emerald-600" : "text-slate-400"}`}>
-                      <span>{hasSpecial ? "✓" : "•"}</span> Special Char (#)
+                    <div className={`flex items-center gap-1.5 transition-colors ${hasSpecial ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-slate-400 dark:text-slate-600"}`}>
+                      <span className="text-sm">{hasSpecial ? "✓" : "•"}</span> Special Char (#)
                     </div>
                   </div>
                 </div>
@@ -204,14 +200,14 @@ export default function SignupPage() {
 
             {/* Profile Image Field */}
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-foreground">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                 Profile Picture
               </label>
               <input
                 type="file"
                 name="image"
                 accept="image/*"
-                className="w-full px-4 py-2.5 rounded-xl bg-white border border-emerald-100 text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition-all duration-200"
+                className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-950 border border-emerald-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 dark:file:bg-emerald-950/50 file:text-emerald-700 dark:file:text-emerald-400 hover:file:bg-emerald-100 dark:hover:file:bg-emerald-900/50 transition-all duration-200"
               />
             </div>
           </div>
@@ -237,11 +233,11 @@ export default function SignupPage() {
         </form>
 
         {/* Footer Link */}
-        <p className="text-center text-foreground text-sm mt-8">
+        <p className="text-center text-slate-600 dark:text-slate-400 text-sm mt-8">
           Already have an account?{" "}
           <Link
             href="/login"
-            className="text-emerald-600 font-semibold hover:text-emerald-500 underline underline-offset-4 decoration-emerald-600/30 hover:decoration-emerald-500 transition-colors"
+            className="text-emerald-600 dark:text-emerald-400 font-semibold hover:text-emerald-500 dark:hover:text-emerald-300 underline underline-offset-4 decoration-emerald-600/30 hover:decoration-emerald-500 transition-colors"
           >
             Sign In
           </Link>

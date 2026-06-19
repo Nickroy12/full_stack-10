@@ -3,7 +3,7 @@ import { createRecipe } from '@/lib/action/action';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const AddRecipeForm = ({user}) => {
+const AddRecipeForm = ({user , maxLimit , uploadCount}) => {
   // 🟢 মক ইউজার ডিফাইন করা হলো (পরবর্তীতে এটি ব্যাকএন্ড বা Auth থেকে আসবে)
 
 
@@ -96,9 +96,16 @@ const AddRecipeForm = ({user}) => {
     <div className="w-full max-w-4xl mx-auto my-6 bg-white dark:bg-gray-900 rounded-2xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-800 transition-colors duration-200">
       
       <div className="bg-gradient-to-r from-emerald-600 to-green-500 p-6 text-white">
-        <h2 className="text-3xl font-extrabold tracking-tight">Create a New Recipe</h2>
+       <div className="flex justify-between">
+        <div>
+           <h2 className="text-3xl font-extrabold tracking-tight">Create a New Recipe</h2>
         
         <p className="text-green-100 mt-1 text-sm">Posting as: <strong>{user.name}</strong></p>
+        </div>
+            <div className=" text-white text-2xl font-medium  px-4 py-2 rounded-lg ">
+          Uploaded: <span className="font-bold">{uploadCount}</span> / {maxLimit}
+        </div>
+       </div>
       </div>
       
       <form onSubmit={handleSubmit} className="p-8 space-y-6">

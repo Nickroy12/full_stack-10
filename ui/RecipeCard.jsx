@@ -51,7 +51,7 @@ const RecipeCard = ({ recipe }) => {
             
             {/* Delete Button */}
             <Link href={`/recipes/details/${recipe._id}`}
-              className="p-2 rounded-md hover:bg-red-50 dark:hover:bg-red-950/30 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+              className="p-2 rounded-md hover:bg-green-50 dark:hover:bg-green-600/50 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
               title="Delete recipe"
             >
               See More
