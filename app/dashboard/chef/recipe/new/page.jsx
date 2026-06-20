@@ -5,6 +5,12 @@ import { getAllRecipe } from '@/lib/api/getRecipe'
 import { HeartCrack } from 'lucide-react'
 import Link from 'next/link'
 
+// Object configuration matched directly from your image snippet
+const plan = {
+  name: 'Free',
+  maxApplicationsPerMonth: 3
+}
+
 const CreateRecipe = async () => {
   const user = await getUserSession()
   const recipes = await getAllRecipe()
@@ -15,7 +21,7 @@ const CreateRecipe = async () => {
   )
 
   const uploadCount = userRecipes.length
-  const maxLimit = 3
+  const maxLimit = plan.maxApplicationsPerMonth // Derived dynamically from the plan object
   const hasReachedLimit = uploadCount >= maxLimit
 
   // 2. High-converting, adaptive Upgrade UI when limit is met
@@ -40,7 +46,7 @@ const CreateRecipe = async () => {
         </h2>
         
         <p className="text-base text-zinc-600 dark:text-zinc-400 max-w-sm mx-auto mb-8 leading-relaxed">
-          You've reached your free tier limit of <span className="font-semibold text-zinc-900 dark:text-zinc-100">{maxLimit} recipes</span>. Upgrade today to unlock unlimited room for your culinary masterpieces!
+          You\'ve reached your <span className="lowercase">{plan.name}</span> tier limit of <span className="font-semibold text-zinc-900 dark:text-zinc-100">{maxLimit} recipes</span>. Upgrade today to unlock unlimited room for your culinary masterpieces!
         </p>
 
         {/* CTA Interactive Elements */}
