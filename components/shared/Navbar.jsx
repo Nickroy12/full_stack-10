@@ -23,6 +23,15 @@ export const Navbar = () => {
     { label: "Feature Recipe", href: "/feature" },
   ];
 
+  const dashboardLinks = {
+    chef: '/dashboard/chef/recipe',
+    admin: '/dashboard/admin/state'
+  };
+
+  // ইউজারের রোল অনুযায়ী ডাইনামিক লিঙ্ক নির্ধারণ (ডিফল্ট /dashboard)
+  const userRole = session?.user?.role;
+  const targetDashboardLink = dashboardLinks[userRole] || '/dashboard';
+
   const isActive = (path) => pathname === path;
 
   // Helper function to extract initials
@@ -125,8 +134,9 @@ export const Navbar = () => {
                         <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{session.user?.email}</p>
                       </div>
                       
+                      {/* ডাইনামিক ড্যাশবোর্ড লিঙ্ক */}
                       <Link
-                        href="/dashboard/chef/recipe"
+                        href={targetDashboardLink}
                         onClick={() => setIsDropdownOpen(false)}
                         className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                       >
@@ -281,8 +291,9 @@ export const Navbar = () => {
                   </div>
                 </div>
 
+                {/* ডাইনামিক ড্যাশবোর্ড লিঙ্ক (মোবাইল) */}
                 <Link
-                  href="/dashboard/chef/recipe"
+                  href={targetDashboardLink}
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-md text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
                 >

@@ -12,17 +12,25 @@ import {
   Settings,
   StickyNotePlus,
   CookingPot,
+  Accessibility,
 } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 
 // Unified Navigation Links
-const navLinks = [
+const chefLinks = [
   { icon: Home, href: "/dashboard/chef/recipe", name: "Dashboard", exact: true },
   { icon: StickyNotePlus, href: "/dashboard/chef/recipe/new", name: "Add recipe" },
   { icon: CookingPot, href: "/dashboard/chef/recipe/my", name: "My recipe" },
   { icon: FileText, href: "/dashboard/chef/recipe/Favourite", name: "Favour recipe" },
   { icon: CreditCard, href: "/dashboard/billing", name: "Billing" },
+  { icon: Settings, href: "/dashboard/profile", name: "Profile" },
+];
+
+const adminLinks = [
+  { icon: Home, href: "/dashboard/admin/state", name: "Dashboard", exact: true },
+  { icon: Accessibility, href: "/dashboard/admin/access", name: "Access Control" },
+  { icon: CreditCard, href: "/dashboard/admin/billing", name: "Billing" },
   { icon: Settings, href: "/dashboard/profile", name: "Profile" },
 ];
 
@@ -32,6 +40,10 @@ export default function DashboardSidebar() {
   const { data: session } = useSession();
 
   const userImage = session?.user?.image;
+  
+  // Extract user role and match it against your link sets (defaults to "chef")
+  const userRole = session?.user?.role?.toLowerCase() || "chef";
+  const activeNavLinks = userRole === "admin" ? adminLinks : chefLinks;
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full w-full text-foreground">
@@ -63,10 +75,10 @@ export default function DashboardSidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {navLinks.map((item) => {
+        {activeNavLinks.map((item) => {
           const Icon = item.icon;
 
-          // FIX: If exact is true, only match exact string. 
+          // If exact is true, only match exact string. 
           // If false, match exact or check if it's a deep sub-route
           const active = item.exact
             ? pathname === item.href
@@ -83,7 +95,7 @@ export default function DashboardSidebar() {
                   : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-800/40"
               }`}
             >
-              {/* UPDATED: Icon color changes to text-green-600 when active */}
+              {/* Icon color changes to text-green-600 when active */}
               <Icon 
                 size={18} 
                 className={active ? "text-green-600 dark:text-green-500" : "text-zinc-400 dark:text-zinc-500"} 
