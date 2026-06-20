@@ -1,26 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { Eye, Star, MoreVertical } from "lucide-react";
+import { Eye, Star } from "lucide-react";
 import Link from "next/link";
+import { updateStatus } from "@/lib/action/status";
 
 export default function RecipeTable({ recipes = [] }) {
   
-
-
-  const handleToggleFeatured = (id, currentStatus) => {
-    console.log("Toggle featured state for:", id, "New state:", !currentStatus);
-  };
-
-  const handleStatusChange = (id, currentStatus) => {
-    console.log("Change status for:", id, "Current:", currentStatus);
-  };
-
-  // ডিজাইনের সাথে মিলিয়ে স্ট্যাটাস স্টাইল (টেক্সট কালার নরমাল, শুধু ডট বা থিম চেঞ্জের জন্য রেখে দেওয়া হয়েছে)
-  const statusStyles = {
-    usual: { text: "text-zinc-700 dark:text-zinc-300", bg: "bg-zinc-500" },
-    draft: { text: "text-zinc-500 dark:text-zinc-400", bg: "bg-zinc-400" },
-    default: { text: "text-zinc-700 dark:text-zinc-300", bg: "bg-zinc-500" }
+  const handleToggleFeatured = async (id) => {
+    const result = await updateStatus(id, { status: 'featured' });
+    console.log(result, 'updated result');
   };
 
   return (
@@ -44,11 +33,11 @@ export default function RecipeTable({ recipes = [] }) {
             </tr>
           ) : (
             recipes.map((recipe) => {
+              // MongoDB ObjectId handling
               const recipeId = typeof recipe._id === "object" ? recipe._id.$oid : recipe._id;
               
-              // কেস-ইনসেনসিটিভ ম্যাচিং এর জন্য ছোট হাতের অক্ষরে কনভার্ট করা হয়েছে
-              const statusKey = recipe.status?.toLowerCase() || "default";
-              const currentStyle = statusStyles[statusKey] || statusStyles.default;
+              // কেস-ইনসেনসিティブ ম্যাচিং
+              const status = recipe.status?.toLowerCase() || "usual";
 
               return (
                 <tr key={recipeId} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/20 transition-colors">
@@ -67,7 +56,7 @@ export default function RecipeTable({ recipes = [] }) {
                     </div>
                   </td>
 
-                  {/* Name & Category/Subtext */}
+                  {/* Name & Category */}
                   <td className="p-4 font-medium text-zinc-900 dark:text-zinc-100">
                     <div className="flex flex-col">
                       <span className="text-zinc-900 dark:text-zinc-50 font-semibold">{recipe.name}</span>
@@ -84,10 +73,17 @@ export default function RecipeTable({ recipes = [] }) {
                     </span>
                   </td>
 
-                  {/* Status Indicator */}
+                  {/* Status Indicator (ইনলাইন কন্ডিশন ব্যাজ সহ) */}
                   <td className="p-4 capitalize">
-                    <span className={`inline-flex items-center text-sm font-medium ${currentStyle.text}`}>
-                      {recipe.status || "Usual"}
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold
+                      ${status === "featured" 
+                        ? "bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20" 
+                        : status === "usual"
+                        ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400"
+                        : "bg-green-700 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
+                      }`}
+                    >
+                      {recipe.status || "usual"}
                     </span>
                   </td>
 
@@ -96,7 +92,7 @@ export default function RecipeTable({ recipes = [] }) {
                     <div className="flex items-center justify-center gap-3">
                       {/* 1. Show Details View */}
                       <Link
-                         href={`/recipes/details/${recipe._id}`}
+                        href={`/recipes/details/${recipeId}`}
                         title="View Details"
                         className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
                       >
@@ -105,24 +101,15 @@ export default function RecipeTable({ recipes = [] }) {
 
                       {/* 2. Admin Feature Toggle */}
                       <button
-                        onClick={() => handleToggleFeatured(recipeId, recipe.isFeatured)}
-                        title={recipe.isFeatured ? "Unfeature recipe" : "Feature recipe"}
+                        onClick={() => handleToggleFeatured(recipeId)}
+                        title={status === "featured" ? "Unfeature recipe" : "Feature recipe"}
                         className={`transition-colors ${
-                          recipe.isFeatured 
+                          status === "featured" 
                             ? "text-amber-500" 
                             : "text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
                         }`}
                       >
-                        <Star size={18} fill={recipe.isFeatured ? "currentColor" : "none"} />
-                      </button>
-
-                      {/* 3. Status Action Option Trigger */}
-                      <button
-                        onClick={() => handleStatusChange(recipeId, recipe.status)}
-                        title="Change Status"
-                        className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
-                      >
-                        <MoreVertical size={18} />
+                        <Star size={18} fill={status === "featured" ? "currentColor" : "none"} />
                       </button>
                     </div>
                   </td>

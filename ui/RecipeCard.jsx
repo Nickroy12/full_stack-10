@@ -18,7 +18,7 @@ const RecipeCard = ({ recipe }) => {
         />
         
         {/* Category Badge */}
-        <span className="absolute top-3 bg-green-600 left-3 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold text-white dark:bg-slate-900/95 text-slate-800 dark:text-slate-200 shadow-sm capitalize backdrop-blur-sm z-10">
+        <span className={`absolute top-3 ${recipe.status == 'usual'? 'bg-green-600':'bg-amber-500'}  left-3 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold text-white dark:bg-slate-900/95 text-slate-800 dark:text-slate-200 shadow-sm capitalize backdrop-blur-sm z-10`}>
           {recipe.status}
         </span>
       </div>

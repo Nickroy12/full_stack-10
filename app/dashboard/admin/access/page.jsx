@@ -4,6 +4,7 @@ import RecipeTable from './RecipeTable'
 
 const AccessControlPage = async() => {
     const recipes = await getAllRecipe()
+    console.log(recipes , "reco");
   return (
     <div className='w-10/12 mx-auto'>
         <h2>AccessControlPage {recipes.length}</h2>
