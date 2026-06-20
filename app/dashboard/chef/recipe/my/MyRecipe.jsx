@@ -15,7 +15,7 @@ const MyRecipe = async ({ recipes }) => {
       {/* Conditional Rendering */}
       {recipes && recipes.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recipes.map((recipe) => (
+          {recipes.reverse().map((recipe) => (
             <RecipeCard key={recipe._id} recipe={recipe} />
           ))}
         </div>
