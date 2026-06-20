@@ -4,6 +4,7 @@ import { getUserSession } from '@/lib/core/sessions'
 import { getAllRecipe } from '@/lib/api/getRecipe'
 import { HeartCrack } from 'lucide-react'
 import Link from 'next/link'
+import { getRecipe } from '@/lib/api/recipe'
 
 // Object configuration matched directly from your image snippet
 const plan = {
@@ -13,14 +14,13 @@ const plan = {
 
 const CreateRecipe = async () => {
   const user = await getUserSession()
-  const recipes = await getAllRecipe()
+  const recipes = await getRecipe(user.id)
 
-  // 1. Filter recipes matching the current user's ID
-  const userRecipes = recipes.filter(
-    (recipe) => recipe.userId === user?._id
-  )
+ 
+ 
 
-  const uploadCount = userRecipes.length
+  const uploadCount = recipes.length
+  console.log(uploadCount , "upload");
   const maxLimit = plan.maxApplicationsPerMonth // Derived dynamically from the plan object
   const hasReachedLimit = uploadCount >= maxLimit
 
