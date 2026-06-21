@@ -43,10 +43,10 @@ const RecipeCard = ({ recipe }) => {
           <div className="flex items-center gap-1">
             {/* Edit Button */}
             <button 
-              className="p-2 rounded-md hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
+              className="p-2 rounded-md flex justify-center items-center hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
               title="Edit recipe"
             >
-              <Heart className="w-4 h-4" />
+              <Heart className="w-4 h-4" /> {recipe.likesCount}
             </button>
             
             {/* Delete Button */}
