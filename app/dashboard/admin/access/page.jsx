@@ -7,7 +7,7 @@ const AccessControlPage = async() => {
     console.log(recipes , "reco");
   return (
     <div className='w-10/12 mx-auto'>
-        <h2>AccessControlPage {recipes.length}</h2>
+        <h2 className="text-center text-4xl font-bold  pb-3">Post ({recipes.length})</h2>
         <RecipeTable recipes={recipes}/>
     </div>
   )
