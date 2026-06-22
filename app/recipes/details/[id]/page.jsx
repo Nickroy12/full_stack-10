@@ -1,6 +1,7 @@
 import { getRecipeById } from '@/lib/api/recipe'
 import { getUserSession } from '@/lib/core/sessions'
 import LikeButton from '@/ui/LikeButton'
+import ReportButton from '@/ui/ReportButton' // ১. নতুন ইম্পোর্ট করা হলো
 import React from 'react'
 
 const DetailsPage = async ({ params }) => {
@@ -8,7 +9,6 @@ const DetailsPage = async ({ params }) => {
   const recipe = await getRecipeById(id)
   const user = await getUserSession()
 
-  // user সেশন null বা undefined হলেও যেন ক্র্যাশ না করে সেজন্য অপশনাল চেইনিং ব্যবহার করা হয়েছে
   const initialHasLiked = recipe?.likedBy && user?.id ? recipe.likedBy.includes(user.id) : false;
 
   if (!recipe) {
@@ -19,11 +19,13 @@ const DetailsPage = async ({ params }) => {
     )
   }
 
+  const recipeStatus = recipe.status?.toLowerCase() || "usual";
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 sm:px-6 transition-colors duration-300">
       <div className="max-w-5xl mx-auto flex flex-col gap-8">
         
-        {/* Top Section: Hero Card (Image + Quick Info + Actions) */}
+        {/* Top Section: Hero Card */}
         <div className="flex flex-col md:flex-row bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700">
           
           {/* Image Container */}
@@ -33,7 +35,9 @@ const DetailsPage = async ({ params }) => {
               alt={recipe.name} 
               className="w-full h-full object-cover"
             />
-            <span className="absolute top-4 left-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold capitalize tracking-wide shadow">
+            {/* ডাইনামিক স্ট্যাটাস কালার */}
+            <span className={`absolute top-4 left-4 text-white px-3 py-1 rounded-full text-xs font-semibold capitalize tracking-wide shadow
+              ${recipeStatus === 'report' ? 'bg-red-600' : 'bg-green-600'}`}>
               {recipe.status}
             </span>
           </div>
@@ -53,7 +57,7 @@ const DetailsPage = async ({ params }) => {
                 {recipe.name}
               </h1>
               
-              {/* Quick Stats Row using Flex */}
+              {/* Quick Stats Row */}
               <div className="flex flex-row justify-between gap-3 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-xl">
                 <div className="flex-1 flex flex-col items-center justify-center border-r border-gray-200 dark:border-gray-700 last:border-0">
                   <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Prep Time</span>
@@ -70,9 +74,9 @@ const DetailsPage = async ({ params }) => {
               </div>
             </div>
 
-            {/* ACTION COMPONENT: Like, Purchase, Report */}
+            {/* ACTION COMPONENT */}
             <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
-              {/* Like Button */}
+              
               <LikeButton 
                 recipeId={id} 
                 initialLikes={recipe.likesCount || 0} 
@@ -80,7 +84,6 @@ const DetailsPage = async ({ params }) => {
                 initialHasLiked={initialHasLiked}
               />
 
-              {/* Purchase Button */}
               <button 
                 className="flex-[2] inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-sm transition shadow-md shadow-green-600/20 dark:shadow-none"
               >
@@ -90,23 +93,16 @@ const DetailsPage = async ({ params }) => {
                 Get Premium Recipe
               </button>
 
-              {/* Report Button */}
-              <button 
-                className="inline-flex items-center justify-center p-2.5 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-950/40 text-red-600 dark:text-red-400 rounded-xl text-sm transition"
-                title="Report an issue"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a1.125 1.125 0 0 0 .917-1.096V4.669c0-.721-.58-1.302-1.3-1.192l-3.376.518a9 9 0 0 1-5.717-.741l-.109-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5" />
-                </svg>
-              </button>
+             
+              <ReportButton recipeId={id} currentStatus={recipeStatus} />
+
             </div>
 
           </div>
         </div>
 
-        {/* Bottom Section: Ingredients & Instructions (Flex Layout) */}
+     
         <div className="flex flex-col md:flex-row gap-8 items-start">
-          {/* Ingredients Box */}
           <div className="w-full md:w-1/3 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col">
             <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b-2 border-green-600 pb-2 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-green-600"></span> Ingredients
@@ -121,7 +117,6 @@ const DetailsPage = async ({ params }) => {
             </ul>
           </div>
 
-          {/* Instructions Box */}
           <div className="w-full md:w-2/3 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col">
             <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b-2 border-green-600 pb-2 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-green-600"></span> How to Cook
@@ -137,7 +132,7 @@ const DetailsPage = async ({ params }) => {
                 }
                 return (
                   <p key={index} className="pl-4 border-l-2 border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400">
-                    {step}
+                    {recipe.instructions}
                   </p>
                 )
               })}

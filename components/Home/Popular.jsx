@@ -8,13 +8,19 @@ const Popular = async () => {
   // Fetch all recipes
   const recipes = await getAllRecipe()
 
-  // Sort by likesCount descending and take the top 2
-  const topLikedRecipes = recipes
+
+  const allowedRecipes = recipes.filter((recipe) => {
+    const status = recipe.status?.toLowerCase();
+    return status !== "report" && status !== "reported";
+  });
+
+
+  const topLikedRecipes = [...allowedRecipes]
     .sort((a, b) => b.likesCount - a.likesCount)
     .slice(0, 6)
 
   return (
-      <PopularRecipe topLikedRecipes={topLikedRecipes} />
+    <PopularRecipe topLikedRecipes={topLikedRecipes} />
   )
 }
 
