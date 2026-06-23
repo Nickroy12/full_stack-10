@@ -25,11 +25,11 @@ export default async function Success({ searchParams }) {
   }
 
   if (status === 'complete') {
-  const subInfo = {
+  const payInfo = {
     email: customerEmail,
     plansId : metadata.planId
   }
-  const result = await createSubscription(subInfo)
+
   
     return (
       <section className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center overflow-hidden bg-[#050506] px-4 py-16 text-zinc-50 antialiased">

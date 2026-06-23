@@ -5,19 +5,21 @@ import { getAllRecipe } from '@/lib/api/getRecipe'
 import { HeartCrack } from 'lucide-react'
 import Link from 'next/link'
 import { getRecipe } from '@/lib/api/recipe'
+import { plansId } from '@/lib/api/plans'
 
 // Object configuration matched directly from your image snippet
-const plan = {
-  name: 'Free',
-  maxApplicationsPerMonth: 3
-}
+// const plan = {
+//   name: 'Free',
+//   maxApplicationsPerMonth: 3
+// }
 
 const CreateRecipe = async () => {
   const user = await getUserSession()
   const recipes = await getRecipe(user.id)
 
  
- 
+ const plan = await plansId(user?.plan || 'as')
+ console.log(plan , "plan");
 
   const uploadCount = recipes.length
   console.log(uploadCount , "upload");

@@ -65,6 +65,7 @@ export default function SignupPage() {
       }
 
       const role = "chef";
+      const plan = role === "chef" ? "chef_free" : null
 
       const { error } = await authClient.signUp.email({
         name,
@@ -72,6 +73,7 @@ export default function SignupPage() {
         password,
         role,
         image: displayUrl,
+        plan
       });
 
       if (error) {

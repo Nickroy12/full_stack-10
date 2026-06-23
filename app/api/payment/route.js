@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { PLAN_PRICE_ID, stripe } from '@/lib/stripe';
 import { getUserSession } from '@/lib/core/sessions';
+import { email } from 'better-auth';
 
 
 export async function POST(request) {
@@ -10,8 +11,9 @@ export async function POST(request) {
         const origin = headersList.get('origin')
 
         const formData = await request.formData()
-        const planId = formData.get('plan_id')
-        const priceId = PLAN_PRICE_ID[planId]
+        const title = formData.get('title')
+        const recipeId = formData.get('recipeId')
+        const price = '9.00'
 
         const user = await getUserSession();
 
@@ -21,13 +23,26 @@ export async function POST(request) {
             line_items: [
                 {
                     // Provide the exact Price ID (for example, price_1234) of the product you want to sell
-                    price: priceId,
+                   price_data:{
+                   currency:'usd',
+                   unit_amount: Number(price) * 100,
+                   product_data:{
+                    name : title
+                   }
+
+                   },
                     quantity: 1,
                 },
             ],
-            mode: 'subscription',
-            metadata: { planId },
-            success_url: `${origin}/pricing/success?session_id={CHECKOUT_SESSION_ID}`,
+            mode: 'payment',
+            metadata: { 
+                price: price,
+                user: user.id,
+                email:user.email,
+                title,
+                recipeId,
+             },
+            success_url: `${origin}/pricing/payment-success?session_id={CHECKOUT_SESSION_ID}`,
         });
         return NextResponse.redirect(session.url, 303)
     } catch (err) {

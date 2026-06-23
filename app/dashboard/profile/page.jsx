@@ -36,8 +36,8 @@ const ProfilePage = async () => {
                   {user?.email}
                 </p>
 
-                <span className="inline-block mt-3 px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full">
-                  Active User
+                <span className={`inline-block mt-3 px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full`}>
+                  {user.plan === "chef-free"? 'Chef': user.plan === "chef-Pro" ? 'Pro Chef' : 'Premium Chef' }
                 </span>
               </div>
             </div>

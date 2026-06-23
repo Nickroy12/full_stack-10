@@ -23,7 +23,7 @@ const chefLinks = [
   { icon: StickyNotePlus, href: "/dashboard/chef/recipe/new", name: "Add recipe" },
   { icon: CookingPot, href: "/dashboard/chef/recipe/my", name: "My recipe" },
   { icon: FileText, href: "/dashboard/chef/recipe/Favourite", name: "Favour recipe" },
-  { icon: CreditCard, href: "/dashboard/billing", name: "Billing" },
+  { icon: CreditCard, href: "/dashboard/chef/billing", name: "Billing" },
   { icon: Settings, href: "/dashboard/profile", name: "Profile" },
 ];
 
@@ -70,6 +70,9 @@ export default function DashboardSidebar() {
           <p className="text-zinc-500 dark:text-zinc-400 text-xs truncate">
             {session?.user?.email}
           </p>
+           <span className={`inline-block mt-3 px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full`}>
+                  {session?.user.plan === "chef-free"? 'Chef': session?.user.plan === "chef-Pro" ? 'Pro Chef' : 'Premium Chef' }
+                </span>
         </div>
       </div>
 
