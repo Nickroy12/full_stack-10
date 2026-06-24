@@ -1,8 +1,6 @@
 import { stripe } from '@/lib/stripe'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { email } from 'better-auth'
-import { plansId } from '@/lib/api/plans'
 import { createSubscription } from '@/lib/action/subscription'
 
 export default async function Success({ searchParams }) {
@@ -12,30 +10,31 @@ export default async function Success({ searchParams }) {
     throw new Error('Please provide a valid session_id (`cs_test_...`)')
   }
 
-  const {
-    status,
-    customer_details: { email: customerEmail },
-    metadata
-  } = await stripe.checkout.sessions.retrieve(session_id, {
+  const session = await stripe.checkout.sessions.retrieve(session_id, {
     expand: ['line_items', 'payment_intent']
   })
+
+  const { status, customer_details, metadata } = session;
+  const customerEmail = customer_details?.email;
 
   if (status === 'open') {
     return redirect('/')
   }
 
   if (status === 'complete') {
-  const payInfo = {
-    email: customerEmail,
-    plansId : metadata.planId
-  }
+    // ১. ডেটাবেজে সাবস্ক্রিপশন বা পেমেন্ট ইনফো সেভ করা
+    if (metadata && metadata.planId) {
+      await createSubscription({
+        email: customerEmail,
+        plansId: metadata.planId,
+        userId: metadata.userId 
+      })
+    }
 
-  
     return (
       <section className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center overflow-hidden bg-[#050506] px-4 py-16 text-zinc-50 antialiased">
         
         {/* --- PREMIUM ANIMATED GRADIENT BACKGROUND --- */}
-        {/* Shifting radial gradient mesh */}
         <div 
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none opacity-40 mix-blend-screen blur-[130px]"
           style={{
@@ -44,7 +43,6 @@ export default async function Success({ searchParams }) {
           }}
         />
         
-        {/* Secondary rotating accent gradient */}
         <div 
           className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full pointer-events-none opacity-30 blur-[100px]"
           style={{
@@ -53,7 +51,6 @@ export default async function Success({ searchParams }) {
           }}
         />
 
-        {/* CSS for custom animations injected cleanly */}
         <style dangerouslySetInnerHTML={{__html: `
           @keyframes pulseGlow {
             0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.3; }
@@ -69,21 +66,17 @@ export default async function Success({ searchParams }) {
             100% { transform: scale(0.95); opacity: 0.5; }
           }
         `}} />
-        {/* ------------------------------------------- */}
 
         <div className="relative w-full max-w-md z-10">
-          
           {/* Main Card */}
           <div className="relative border border-zinc-800/80 bg-zinc-900/40 rounded-3xl p-8 sm:p-10 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.9)] backdrop-blur-xl text-center space-y-8">
             
-            {/* Animated Success Badge with Breathing Ring */}
+            {/* Animated Success Badge */}
             <div className="relative mx-auto h-14 w-14">
-              {/* Breathing Glow Ring */}
               <div 
                 className="absolute inset-0 rounded-full bg-emerald-500/20 blur-md pointer-events-none"
                 style={{ animation: 'pulseRing 3s ease-in-out infinite' }}
               />
-              {/* Actual Icon Wrapper */}
               <div className="relative flex h-full w-full items-center justify-center rounded-full border border-emerald-500/40 bg-zinc-950/80 text-emerald-400 shadow-[inset_0_1px_12px_rgba(16,185,129,0.15)]">
                 <svg
                   className="h-6 w-6 filter drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]"

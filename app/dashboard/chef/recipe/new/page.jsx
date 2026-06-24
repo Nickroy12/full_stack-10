@@ -19,10 +19,10 @@ const CreateRecipe = async () => {
 
  
  const plan = await plansId(user?.plan || 'as')
- console.log(plan , "plan");
+
 
   const uploadCount = recipes.length
-  console.log(uploadCount , "upload");
+ 
   const maxLimit = plan.maxApplicationsPerMonth // Derived dynamically from the plan object
   const hasReachedLimit = uploadCount >= maxLimit
 

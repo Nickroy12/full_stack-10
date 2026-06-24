@@ -29,9 +29,9 @@ const Page = async () => {
             </div>
             
             {myLikedRecipes.length === 0 ? (
-                <div className="text-center py-20 border border-neutral-800 bg-neutral-900/20 rounded-2xl">
-                    <p className="text-neutral-500 text-sm">আপনি এখনও কোনো রেসিপিতে লাইক দেননি।</p>
-                </div>
+                <div className="text-center h-screen py-20 flex justify-center items-center border border-green-600/30 bg-green-600/5 rounded-2xl">
+    <p className="text-green-600 text-4xl font-bold ">You haven't liked any recipes yet.</p>
+</div>
             ) : (
                
                 <div className="grid grid-cols-1 gap-3">

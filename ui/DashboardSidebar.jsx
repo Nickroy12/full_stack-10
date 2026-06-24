@@ -71,7 +71,7 @@ export default function DashboardSidebar() {
             {session?.user?.email}
           </p>
            <span className={`inline-block mt-3 px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full`}>
-                  {session?.user.plan === "chef-free"? 'Chef': session?.user.plan === "chef-Pro" ? 'Pro Chef' : 'Premium Chef' }
+                  {session?.user.plan === "chef_free"? 'Chef': session?.user.plan === "chef_Pro" ? 'Pro Chef' : 'Premium Chef' }
                 </span>
         </div>
       </div>

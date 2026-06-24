@@ -4,22 +4,24 @@ import { getUserSession } from '@/lib/core/sessions';
 import React from 'react'
 
 const StatePage = async() => {
-  const user = await getUserSession()
-  const recipe = await getRecipe(user.id) || [];
+ const user = await getUserSession()
+  const rawRecipe = await getRecipe(user.id);
+  
+  // নিশ্চিত করা হচ্ছে recipe যেন সবসময় একটি অ্যারে হয়
+  const recipe = Array.isArray(rawRecipe) ? rawRecipe : [];
    
   const totalRecipe = recipe.length;
 
   // ১. status === 'featured' ফিল্টার করে তার লেংথ বের করা হলো
-  const totalFeatured = recipe.filter(item => item.status === 'featured').length;
+  const totalFeatured = recipe.filter(item => item?.status === 'featured').length;
 
   // ২. সব রেসিপির likesCount যোগ (sum) করা হলো
-  const totalLikes = recipe.reduce((sum, item) => sum + (Number(item.likesCount) || 0), 0);
-
+  const totalLikes = recipe.reduce((sum, item) => sum + (Number(item?.likesCount) || 0), 0);
   return (
     <div className="p-6 w-full bg-[#0c0c0e] min-h-screen text-gray-100">
       
       <div className="w-full mx-auto">
-        <h2 className="text-center text-4xl font-bold  pb-3" >Website Statics</h2>
+        <h2 className="text-center text-4xl font-bold  pb-3" > Statics</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           
           {/* Card 1: Total Post */}
