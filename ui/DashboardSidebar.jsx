@@ -13,6 +13,7 @@ import {
   StickyNotePlus,
   CookingPot,
   Accessibility,
+  ShoppingCart,
 } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
@@ -24,6 +25,7 @@ const chefLinks = [
   { icon: CookingPot, href: "/dashboard/chef/recipe/my", name: "My recipe" },
   { icon: FileText, href: "/dashboard/chef/recipe/Favourite", name: "Favour recipe" },
   { icon: CreditCard, href: "/dashboard/chef/billing", name: "Billing" },
+  { icon: ShoppingCart, href: "/dashboard/chef/purchaseInfo", name: "Purchase Info" },
   { icon: Settings, href: "/dashboard/profile", name: "Profile" },
 ];
 
@@ -31,6 +33,7 @@ const adminLinks = [
   { icon: Home, href: "/dashboard/admin/state", name: "Dashboard", exact: true },
   { icon: Accessibility, href: "/dashboard/admin/access", name: "Access Control" },
   { icon: CreditCard, href: "/dashboard/admin/billing", name: "Billing" },
+    { icon: ShoppingCart, href: "/dashboard/admin/purchaseInfo", name: "Purchase Info" },
   { icon: Settings, href: "/dashboard/profile", name: "Profile" },
 ];
 

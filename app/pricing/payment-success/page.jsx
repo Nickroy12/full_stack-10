@@ -2,6 +2,7 @@ import { stripe } from '@/lib/stripe'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createSubscription } from '@/lib/action/subscription'
+import { createPayment } from '@/lib/action/payment'
 
 export default async function Success({ searchParams }) {
   const { session_id } = await searchParams
@@ -23,14 +24,15 @@ export default async function Success({ searchParams }) {
 
   if (status === 'complete') {
     // ১. ডেটাবেজে সাবস্ক্রিপশন বা পেমেন্ট ইনফো সেভ করা
-    if (metadata && metadata.planId) {
-      await createSubscription({
-        email: customerEmail,
-        plansId: metadata.planId,
-        userId: metadata.userId 
-      })
-    }
-
+  const payInfo = {
+    title: metadata.title,
+    price:metadata.price,
+    email: customerEmail,
+    recipeId: metadata.recipeId,
+    userId: metadata.user 
+  }
+  await createPayment(payInfo)
+  
     return (
       <section className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center overflow-hidden bg-[#050506] px-4 py-16 text-zinc-50 antialiased">
         
@@ -118,13 +120,7 @@ export default async function Success({ searchParams }) {
 
             {/* Actions */}
             <div className="space-y-3 pt-2">
-              <Link
-                href="/dashboard"
-                className="flex w-full items-center justify-center rounded-xl bg-zinc-50 px-6 py-3.5 text-sm font-semibold text-zinc-950 shadow-md hover:bg-white active:scale-[0.98] transition-all duration-150"
-              >
-                Go to Dashboard
-              </Link>
-              
+        
               <Link
                 href="/"
                 className="flex w-full items-center justify-center rounded-xl border border-zinc-800 bg-transparent px-6 py-3.5 text-sm font-medium text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 transition-all duration-150"
