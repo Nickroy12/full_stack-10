@@ -5,7 +5,7 @@ import ThemeToggle from "@/ui/ThemeToogle";
 
 import { ChefHat, Loader2, LogOut, LayoutDashboard, Settings } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useState, useRef, useEffect } from "react";
 import { FaSpoon } from "react-icons/fa6";
 import { toast } from "react-toastify";
@@ -16,7 +16,7 @@ export const Navbar = () => {
   const pathname = usePathname();
   const { data: session, isPending } = useSession();
   const dropdownRef = useRef(null);
-
+const router = useRouter();
   const menuItems = [
     { label: "Home", href: "/" },
     { label: "Browse Recipes", href: "/recipes" },
@@ -57,6 +57,8 @@ export const Navbar = () => {
 
   const handleSignOut = async () => {
      await signOut(); 
+   router.push('/auth/login');
+    router.refresh();
      toast.error("Signing out...");
   };
 
