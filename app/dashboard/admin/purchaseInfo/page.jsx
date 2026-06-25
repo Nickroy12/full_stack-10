@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getAllPayment } from '@/lib/api/payment'
 import React from 'react'
 

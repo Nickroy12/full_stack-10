@@ -1,10 +1,11 @@
+export const dynamic = "force-dynamic";
 import { getAllSubscription } from '@/lib/api/subscription'
 import React from 'react'
 
 const Page = async () => {
   const subscription = await getAllSubscription()
   
-  console.log(subscription, "subscb")
+  // console.log(subscription, "subscb")
 
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto min-h-screen transition-colors duration-200">

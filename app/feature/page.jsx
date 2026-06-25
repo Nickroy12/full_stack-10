@@ -1,10 +1,11 @@
+export const dynamic = "force-dynamic";
 import { getAllRecipe } from "@/lib/api/getRecipe";
 import RecipeCard from "@/ui/RecipeCard";
 import React from "react";
 
 const FeaturePage = async () => {
   const recipes = await getAllRecipe();
-  console.log(recipes.userId , "UserId");
+  // console.log(recipes.userId , "UserId");
 
   // Filter recipes where the status is 'featured'
   const featuredRecipes = recipes.filter((recipe) => recipe.status === "featured");
