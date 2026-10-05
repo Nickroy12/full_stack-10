@@ -26,7 +26,7 @@ const itemVariants = {
 
 const PopularRecipe = ({ topLikedRecipes = [] }) => {
   return (
-<div className="p-4 max-w-6xl mx-auto bg-background text-foreground transition-colors duration-300">
+<div className="p-4 max-w-7xl mx-auto bg-background text-foreground transition-colors duration-300">
   <h2 className="text-xl font-bold mb-6 border-l-4 border-emerald-600 pl-3 text-foreground">
     Most Liked Recipes
   </h2>

@@ -3,7 +3,7 @@ import Link from 'next/link'
 export default function NotFound() {
   return (
     <div className="w-full min-h-[85vh] mx-auto flex items-center justify-center  bg-background bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1f293d_1px,transparent_1px)] [background-size:20px_20px] px-6 py-12 md:py-24 transition-colors duration-300">
-      <div className="max-w-2xl mx-auto w-full text-center flex flex-col items-center">
+      <div className="max-w-7xl mx-auto w-full text-center flex flex-col items-center">
         
         {/* Bilingual Badge */}
         <div className="inline-flex items-center gap-2 bg-[#E6F6F0] dark:bg-[#06261B] text-[#00A86B] dark:text-[#00C47D] text-xs font-bold tracking-wide uppercase px-4 py-2 rounded-full mb-8 border border-emerald-100 dark:border-emerald-900/30 shadow-sm transition-colors duration-300">

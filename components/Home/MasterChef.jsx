@@ -10,7 +10,7 @@ const MasterChef = () => {
     <div className='w-full bg-white dark:bg-zinc-950 transition-colors duration-300'>
        
        {/* 2. This inner container handles the max-width restriction, centering, and padding */}
-       <div className='max-w-6xl mx-auto px-4 py-12 md:py-20 overflow-hidden'>
+       <div className='max-w-7xl mx-auto px-4 py-12 md:py-20 overflow-hidden'>
           <div className="flex flex-col md:flex-row justify-between items-center gap-12">
              
              {/* Left Side: Image Container */}

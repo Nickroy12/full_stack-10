@@ -51,7 +51,7 @@ const pricingPlans = [
 
 const PricingCards = () => {
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-12 transition-colors duration-300">
+    <div className="w-full max-w-7xl mx-auto px-4 py-12 transition-colors duration-300">
       {/* Header Section */}
       <div className="text-center mb-12">
         <h2 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
