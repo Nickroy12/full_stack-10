@@ -1,6 +1,6 @@
 # 🍲 RannaBanna
 
-## 📖 Project Overview
+## 📖 Project Overview           
 
 **RannaBanna** is a subscription-based recipe-sharing platform where chefs can create, manage, and share their favorite recipes with food lovers worldwide.
 
