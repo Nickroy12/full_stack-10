@@ -18,7 +18,7 @@ const StatePage = async() => {
   // ২. সব রেসিপির likesCount যোগ (sum) করা হলো
   const totalLikes = recipe.reduce((sum, item) => sum + (Number(item?.likesCount) || 0), 0);
   return (
-    <div className="p-6 w-full bg-background min-h-screen text-background">
+    <div className="p-6 w-full bg-background min-h-screen text-green-600">
       
       <div className="w-full mx-auto">
         <h2 className="text-center text-4xl font-bold  pb-3" > Statics</h2>
